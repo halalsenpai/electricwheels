@@ -1,0 +1,7 @@
+[
+  {"id":"dealer-khi-1","name":"EV Karachi Central","city":"Karachi","phone":"021-111-222-333","whatsapp":"+923001112223","address":"Shahrah-e-Faisal","brandIds":["evee","vlektra"]},
+  {"id":"dealer-lhr-1","name":"EV Lahore Hub","city":"Lahore","phone":"042-222-333-444","whatsapp":"+923121234567","address":"Ferozepur Road","brandIds":["metro","evee"]},
+  {"id":"dealer-isl-1","name":"EV Islamabad","city":"Islamabad","phone":"051-333-444-555","whatsapp":"+923331112233","address":"Blue Area","brandIds":["vlektra","metro"]}
+]
+
+
