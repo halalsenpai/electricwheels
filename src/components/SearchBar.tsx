@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Search, X, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -21,6 +22,7 @@ export function SearchBar({
   models,
   className = "" 
 }: SearchBarProps) {
+  const router = useRouter();
   const [query, setQuery] = useState('');
   const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -62,6 +64,9 @@ export function SearchBar({
     onSearch(suggestion);
     setIsSuggestionsOpen(false);
     inputRef.current?.blur();
+    
+    // Navigate to search page with the suggestion
+    router.push(`/search?q=${encodeURIComponent(suggestion)}`);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

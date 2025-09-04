@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { SearchBar } from './SearchBar';
 import { FilterDropdown } from './FilterDropdown';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,7 @@ interface SearchFiltersProps {
 }
 
 export function SearchFilters({ models, className = "" }: SearchFiltersProps) {
+  const router = useRouter();
   const {
     searchQuery,
     setSearchQuery,
@@ -135,6 +137,17 @@ export function SearchFilters({ models, className = "" }: SearchFiltersProps) {
     setSelectedBatteryTypes([]);
   };
 
+  const navigateToSearchPage = () => {
+    const params = new URLSearchParams();
+    if (searchQuery) params.set('q', searchQuery);
+    if (selectedBrands.length) params.set('brands', selectedBrands.join(','));
+    if (selectedPriceRanges.length) params.set('priceRanges', selectedPriceRanges.join(','));
+    if (selectedRanges.length) params.set('ranges', selectedRanges.join(','));
+    if (selectedBatteryTypes.length) params.set('batteryTypes', selectedBatteryTypes.join(','));
+    
+    router.push(`/search?${params.toString()}`);
+  };
+
   const hasActiveFilters = searchQuery || 
     selectedBrands.length > 0 || 
     selectedPriceRanges.length > 0 || 
@@ -244,6 +257,14 @@ export function SearchFilters({ models, className = "" }: SearchFiltersProps) {
               className="h-6 px-2 text-xs"
             >
               Clear all
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={navigateToSearchPage}
+              className="h-6 px-2 text-xs"
+            >
+              Advanced Search
             </Button>
           </div>
         )}

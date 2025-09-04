@@ -134,8 +134,8 @@ export default async function HomePage() {
         </section>
 
         {/* Search Results Section */}
-        <section className="py-12 sm:py-16 lg:py-20 bg-background w-full">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+        <section className="py-16 sm:py-20 lg:py-24 bg-background w-full">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 w-full">
             <SearchResultsWrapper />
           </div>
         </section>
