@@ -5,7 +5,7 @@ import { SearchBar } from './SearchBar';
 import { FilterDropdown } from './FilterDropdown';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Filter, Search, Zap, Gauge } from 'lucide-react';
+import { Filter, Search, Zap, Gauge, Building2, DollarSign, Route, Battery, Weight, Shield } from 'lucide-react';
 import { allModels } from '@/lib/data';
 
 interface AdvancedFiltersProps {
@@ -183,6 +183,7 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch, onLead
             selectedValues={selectedBrands}
             onSelectionChange={setSelectedBrands}
             className="w-full"
+            icon={<Building2 className="h-4 w-4" />}
           />
           
           <FilterDropdown
@@ -191,6 +192,7 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch, onLead
             selectedValues={selectedPriceRanges}
             onSelectionChange={setSelectedPriceRanges}
             className="w-full"
+            icon={<DollarSign className="h-4 w-4" />}
           />
           
           <FilterDropdown
@@ -199,6 +201,7 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch, onLead
             selectedValues={selectedRanges}
             onSelectionChange={setSelectedRanges}
             className="w-full"
+            icon={<Route className="h-4 w-4" />}
           />
           
           <FilterDropdown
@@ -207,6 +210,7 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch, onLead
             selectedValues={selectedBatteryTypes}
             onSelectionChange={setSelectedBatteryTypes}
             className="w-full"
+            icon={<Battery className="h-4 w-4" />}
           />
         </CardContent>
       </Card>
@@ -226,6 +230,7 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch, onLead
             selectedValues={selectedMotorPower}
             onSelectionChange={setSelectedMotorPower}
             className="w-full"
+            icon={<Zap className="h-4 w-4" />}
           />
           
           <FilterDropdown
@@ -234,6 +239,7 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch, onLead
             selectedValues={selectedTopSpeed}
             onSelectionChange={setSelectedTopSpeed}
             className="w-full"
+            icon={<Gauge className="h-4 w-4" />}
           />
         </CardContent>
       </Card>
@@ -253,6 +259,7 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch, onLead
             selectedValues={selectedWeight}
             onSelectionChange={setSelectedWeight}
             className="w-full"
+            icon={<Weight className="h-4 w-4" />}
           />
           
           <FilterDropdown
@@ -261,6 +268,7 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch, onLead
             selectedValues={selectedBrakes}
             onSelectionChange={setSelectedBrakes}
             className="w-full"
+            icon={<Shield className="h-4 w-4" />}
           />
         </CardContent>
       </Card>

@@ -6,7 +6,7 @@ import { SearchBar } from './SearchBar';
 import { FilterDropdown } from './FilterDropdown';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { X, Filter } from 'lucide-react';
+import { X, Filter, Building2, DollarSign, Route, Battery, Zap, Gauge, Weight, Shield, Search } from 'lucide-react';
 import { Model } from '@/types';
 import { useSearch } from '@/contexts/SearchContext';
 
@@ -180,24 +180,28 @@ export function SearchFilters({ models, className = "", onLeadCapture, onAdvance
                 options={filterOptions.brands}
                 selectedValues={selectedBrands}
                 onSelectionChange={setSelectedBrands}
+                icon={<Building2 className="h-4 w-4" />}
               />
               <FilterDropdown
                 label="Price Range"
                 options={filterOptions.priceRanges}
                 selectedValues={selectedPriceRanges}
                 onSelectionChange={setSelectedPriceRanges}
+                icon={<DollarSign className="h-4 w-4" />}
               />
               <FilterDropdown
                 label="Range"
                 options={filterOptions.ranges}
                 selectedValues={selectedRanges}
                 onSelectionChange={setSelectedRanges}
+                icon={<Route className="h-4 w-4" />}
               />
               <FilterDropdown
                 label="Battery"
                 options={filterOptions.batteryTypes}
                 selectedValues={selectedBatteryTypes}
                 onSelectionChange={setSelectedBatteryTypes}
+                icon={<Battery className="h-4 w-4" />}
               />
             </div>
 
@@ -207,65 +211,70 @@ export function SearchFilters({ models, className = "", onLeadCapture, onAdvance
               <div className="mt-4 sm:mt-5 md:mt-6 border-t pt-4 sm:pt-5 flex flex-wrap items-center gap-2">
                 <span className="text-xs sm:text-sm font-medium text-muted-foreground mr-1">Active:</span>
                 {searchQuery && (
-                  <Badge variant="secondary" className="gap-1 rounded-full px-3 py-1">
-                    Search: &quot;{searchQuery}&quot;
+                  <Badge variant="secondary" className="gap-1 rounded-full px-3 py-1 bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                    <Search className="h-3 w-3" />
+                    &quot;{searchQuery}&quot;
                     <button
                       type="button"
                       aria-label="Remove search query filter"
                       onClick={(e) => { e.stopPropagation(); setSearchQuery(''); }}
-                      className="inline-flex items-center justify-center"
+                      className="inline-flex items-center justify-center hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full p-0.5 transition-colors"
                     >
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 )}
                 {selectedBrands.map(brand => (
-                  <Badge key={brand} variant="secondary" className="gap-1 rounded-full px-3 py-1">
+                  <Badge key={brand} variant="secondary" className="gap-1 rounded-full px-3 py-1 bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800">
+                    <Building2 className="h-3 w-3" />
                     {brand}
                     <button
                       type="button"
                       aria-label={`Remove ${brand} filter`}
                       onClick={(e) => { e.stopPropagation(); setSelectedBrands((prev) => prev.filter((b) => b !== brand)); }}
-                      className="inline-flex items-center justify-center"
+                      className="inline-flex items-center justify-center hover:bg-green-200 dark:hover:bg-green-800 rounded-full p-0.5 transition-colors"
                     >
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 ))}
                 {selectedPriceRanges.map(range => (
-                  <Badge key={range} variant="secondary" className="gap-1 rounded-full px-3 py-1">
+                  <Badge key={range} variant="secondary" className="gap-1 rounded-full px-3 py-1 bg-yellow-100 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-800">
+                    <DollarSign className="h-3 w-3" />
                     {filterOptions.priceRanges.find(r => r.value === range)?.label}
                     <button
                       type="button"
                       aria-label={`Remove ${range} price filter`}
                       onClick={(e) => { e.stopPropagation(); setSelectedPriceRanges((prev) => prev.filter((r) => r !== range)); }}
-                      className="inline-flex items-center justify-center"
+                      className="inline-flex items-center justify-center hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded-full p-0.5 transition-colors"
                     >
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 ))}
                 {selectedRanges.map(range => (
-                  <Badge key={range} variant="secondary" className="gap-1 rounded-full px-3 py-1">
+                  <Badge key={range} variant="secondary" className="gap-1 rounded-full px-3 py-1 bg-purple-100 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                    <Route className="h-3 w-3" />
                     {filterOptions.ranges.find(r => r.value === range)?.label}
                     <button
                       type="button"
                       aria-label={`Remove ${range} range filter`}
                       onClick={(e) => { e.stopPropagation(); setSelectedRanges((prev) => prev.filter((r) => r !== range)); }}
-                      className="inline-flex items-center justify-center"
+                      className="inline-flex items-center justify-center hover:bg-purple-200 dark:hover:bg-purple-800 rounded-full p-0.5 transition-colors"
                     >
                       <X className="h-3 w-3" />
                     </button>
                   </Badge>
                 ))}
                 {selectedBatteryTypes.map(type => (
-                  <Badge key={type} variant="secondary" className="gap-1 rounded-full px-3 py-1">
+                  <Badge key={type} variant="secondary" className="gap-1 rounded-full px-3 py-1 bg-orange-100 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800">
+                    <Battery className="h-3 w-3" />
                     {type}
                     <button
                       type="button"
                       aria-label={`Remove ${type} battery filter`}
                       onClick={(e) => { e.stopPropagation(); setSelectedBatteryTypes((prev) => prev.filter((t) => t !== type)); }}
-                      className="inline-flex items-center justify-center"
+                      className="inline-flex items-center justify-center hover:bg-orange-200 dark:hover:bg-orange-800 rounded-full p-0.5 transition-colors"
                     >
                       <X className="h-3 w-3" />
                     </button>
