@@ -29,6 +29,7 @@ export type Price = {
 export type Model = {
   id: string;
   brandId: string;
+  brand: string;
   name: string;
   slug: string;
   specs: ModelSpec;

@@ -99,12 +99,14 @@ export default async function ComparePage({ params }: ComparePageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <div className="mx-auto max-w-5xl p-6 space-y-6">
+      <div className="mx-auto max-w-6xl px-4 py-6">
+        <div className="max-w-5xl mx-auto p-6 space-y-6">
         <h1 className="text-3xl font-bold">{A.name} vs {B.name}</h1>
         <p className="text-muted-foreground">
           Detailed comparison of {A.name} and {B.name} electric bikes
         </p>
         <CompareTable a={A} b={B} />
+        </div>
       </div>
     </>
   );

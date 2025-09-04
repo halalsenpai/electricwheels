@@ -22,7 +22,7 @@ export function SpecTable({ model }: { model: Model }) {
           {rows.map((r) => (
             <tr key={r.label} className="border-b last:border-b-0">
               <td className="px-4 py-2 w-1/2 text-muted-foreground">{r.label}</td>
-              <td className="px-4 py-2">{r.value as any}</td>
+              <td className="px-4 py-2">{r.value as string | number}</td>
             </tr>
           ))}
         </tbody>

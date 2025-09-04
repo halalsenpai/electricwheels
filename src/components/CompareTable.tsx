@@ -24,8 +24,8 @@ export function CompareTable({ a, b }: { a: Model; b: Model }) {
           {rows.map((r) => (
             <tr key={r.label} className="border-b last:border-b-0">
               <td className="px-4 py-2 w-1/3 text-muted-foreground">{r.label}</td>
-              <td className="px-4 py-2 w-1/3">{r.get(a) as any}</td>
-              <td className="px-4 py-2 w-1/3">{r.get(b) as any}</td>
+              <td className="px-4 py-2 w-1/3">{r.get(a) as string | number}</td>
+              <td className="px-4 py-2 w-1/3">{r.get(b) as string | number}</td>
             </tr>
           ))}
         </tbody>

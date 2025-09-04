@@ -1,10 +1,13 @@
 import { allModels } from "@/lib/data";
 import { BikeCard } from "@/components/BikeCard";
 import { CompareSelector } from "@/components/CompareSelector";
+import { SearchFilters } from "@/components/SearchFilters";
+import { SearchResultsWrapper } from "@/components/SearchResultsWrapper";
+import { SearchProvider } from "@/contexts/SearchContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Zap, Shield, Users, TrendingUp, Star, ArrowRight, Sparkles } from "lucide-react";
+import { Zap, Shield, Users, TrendingUp, ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import Script from "next/script";
@@ -41,12 +44,6 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const featuredModels = allModels.slice(0, 6);
-  const stats = [
-    { label: "Bike Models", value: allModels.length.toString() },
-    { label: "Brands", value: "3" },
-    { label: "Dealers", value: "15+" },
-    { label: "Happy Customers", value: "500+" }
-  ];
 
   const features = [
     {
@@ -97,60 +94,55 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <div className="min-h-screen">
-        {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-950/20 dark:to-emerald-950/20 py-12 sm:py-16 lg:py-20">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center space-y-6 sm:space-y-8">
-              <div className="space-y-3 sm:space-y-4">
-                <Badge variant="secondary" className="text-xs sm:text-sm px-3 py-1">
-                  <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                  Pakistan's #1 EV Bike Comparison Platform
+      <SearchProvider initialModels={allModels}>
+        <div className="min-h-screen w-full">
+        {/* Hero Section with Search */}
+        <section className="relative bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-950/20 dark:to-emerald-950/20 py-16 sm:py-20 lg:py-24 w-full">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 w-full">
+            <div className="text-center space-y-8 sm:space-y-10">
+              <div className="space-y-4 sm:space-y-6">
+                <Badge variant="secondary" className="text-xs sm:text-sm px-4 py-2 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+                  <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+                  Pakistan&apos;s #1 EV Bike Comparison Platform
                 </Badge>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight">
                   Find Your Perfect
                   <span className="text-green-600 dark:text-green-400 block sm:inline"> Electric Bike</span>
                 </h1>
-                <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                  Compare prices, specs, and dealers for all major EV bike brands in Pakistan. 
-                  Make an informed decision with our comprehensive comparison tools.
+                <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                  Search and filter through all major EV bike brands in Pakistan. 
+                  Compare prices, specs, and find the perfect bike for your needs.
                 </p>
               </div>
               
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-                <Button asChild size="lg" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4">
-                  <Link href="/bikes">
-                    Browse All Bikes
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="lg" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4">
-                  <Link href="/compare/evee-c1/vs/vlektra-bolt">
-                    Compare Now
-                  </Link>
-                </Button>
+              {/* Search and Filters */}
+              <div className="max-w-5xl mx-auto">
+                <SearchFilters models={allModels} />
               </div>
 
-              {/* Stats */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 pt-8 sm:pt-12">
-                {stats.map((stat, index) => (
-                  <div key={index} className="text-center p-3 sm:p-4">
-                    <div className="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-400">
-                      {stat.value}
-                    </div>
-                    <div className="text-xs sm:text-sm text-muted-foreground">
-                      {stat.label}
-                    </div>
-                  </div>
-                ))}
+              {/* Single CTA */}
+              <div className="pt-4">
+                <Button asChild size="lg" className="h-12 px-8 text-base font-medium bg-green-600 hover:bg-green-700 transition-colors">
+                  <Link href="/compare/evee-c1/vs/vlektra-bolt" className="flex items-center gap-2">
+                    <ArrowRight className="h-4 w-4" />
+                    Compare Popular Bikes
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
         </section>
 
+        {/* Search Results Section */}
+        <section className="py-12 sm:py-16 lg:py-20 bg-background w-full">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+            <SearchResultsWrapper />
+          </div>
+        </section>
+
         {/* Features Section */}
-        <section className="py-12 sm:py-16 lg:py-20 bg-background">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="py-12 sm:py-16 lg:py-20 bg-background w-full">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
             <div className="text-center space-y-3 sm:space-y-4 mb-12 sm:mb-16">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
                 Why Choose Electric Wheels?
@@ -179,8 +171,8 @@ export default async function HomePage() {
         </section>
 
         {/* Compare Section */}
-        <section className="py-12 sm:py-16 lg:py-20 bg-muted/30">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="py-12 sm:py-16 lg:py-20 bg-muted/30 w-full">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
             <div className="text-center space-y-3 sm:space-y-4 mb-8 sm:mb-12">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
                 Compare Bikes Instantly
@@ -197,8 +189,8 @@ export default async function HomePage() {
         </section>
 
         {/* Featured Bikes Section */}
-        <section className="py-12 sm:py-16 lg:py-20 bg-background">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="py-12 sm:py-16 lg:py-20 bg-background w-full">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
             <div className="text-center space-y-3 sm:space-y-4 mb-8 sm:mb-12">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
                 Popular Electric Bikes
@@ -226,8 +218,8 @@ export default async function HomePage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-12 sm:py-16 lg:py-20 bg-green-600 dark:bg-green-700">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+        <section className="py-12 sm:py-16 lg:py-20 bg-green-600 dark:bg-green-700 w-full">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center w-full">
             <div className="space-y-6 sm:space-y-8">
               <div className="space-y-3 sm:space-y-4">
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
@@ -252,9 +244,10 @@ export default async function HomePage() {
                 </Button>
               </div>
             </div>
-          </div>
-        </section>
-      </div>
+        </div>
+                </section>
+    </div>
+      </SearchProvider>
     </>
   );
 }

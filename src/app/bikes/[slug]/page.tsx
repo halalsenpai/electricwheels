@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export const revalidate = 60 * 60 * 24; // 1 day for price updates
+export const revalidate = 86400; // 1 day for price updates
 
 export default async function ModelPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -31,7 +31,8 @@ export default async function ModelPage({ params }: { params: Promise<{ slug: st
   
   
   return (
-      <div className="mx-auto max-w-5xl p-6 space-y-8">
+      <div className="mx-auto max-w-6xl px-4 py-6">
+        <div className="max-w-5xl mx-auto p-6 space-y-8">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <header className="space-y-2">
           <h1 className="text-3xl font-bold">{model.name}</h1>
@@ -51,6 +52,7 @@ export default async function ModelPage({ params }: { params: Promise<{ slug: st
             <InstallmentCalculator price={model.price.msrp} />
             <LeadForm modelId={model.id} />
           </div>
+        </div>
         </div>
       </div>
   );

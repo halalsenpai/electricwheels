@@ -4,7 +4,10 @@ import dealers from '@/mock-data/dealers.json';
 import type { Brand, Model, Dealer } from '@/types';
 
 export const allBrands = brands as Brand[];
-export const allModels = models as Model[];
+export const allModels = (models as Model[]).map(model => ({
+  ...model,
+  brand: allBrands.find(brand => brand.id === model.brandId)?.name || 'Unknown'
+}));
 export const allDealers = dealers as Dealer[];
 
 export function getModelBySlug(slug: string): Model | undefined {
