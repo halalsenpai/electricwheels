@@ -5,7 +5,6 @@ import { SpecTable } from '@/components/SpecTable';
 import { InstallmentCalculator } from '@/components/InstallmentCalculator';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 import { LeadForm } from '@/components/LeadForm';
-import { NextIntlClientProvider } from "next-intl";
 
 export async function generateStaticParams() {
   return allModels.map((m) => ({ slug: m.slug }));
@@ -30,10 +29,8 @@ export default async function ModelPage({ params }: { params: Promise<{ slug: st
   if (!model) notFound();
   const jsonLd = productJsonLd(model);
   
-  const messages = (await import(`../../messages/en.json`)).default;
   
   return (
-    <NextIntlClientProvider locale="en" messages={messages}>
       <div className="mx-auto max-w-5xl p-6 space-y-8">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <header className="space-y-2">
@@ -56,6 +53,5 @@ export default async function ModelPage({ params }: { params: Promise<{ slug: st
           </div>
         </div>
       </div>
-    </NextIntlClientProvider>
   );
 }

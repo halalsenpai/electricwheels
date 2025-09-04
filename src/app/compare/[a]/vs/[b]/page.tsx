@@ -70,7 +70,7 @@ export default async function ComparePage({ params }: ComparePageProps) {
       {
         "@type": "Product",
         "name": A.name,
-        "brand": A.brand,
+        "brand": A.brandId,
         "description": `${A.name} electric bike`,
         "offers": {
           "@type": "Offer",
@@ -81,7 +81,7 @@ export default async function ComparePage({ params }: ComparePageProps) {
       {
         "@type": "Product",
         "name": B.name,
-        "brand": B.brand,
+        "brand": B.brandId,
         "description": `${B.name} electric bike`,
         "offers": {
           "@type": "Offer",
