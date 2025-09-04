@@ -14,13 +14,17 @@ interface SearchBarProps {
   onSearch: (query: string) => void;
   models: Model[];
   className?: string;
+  onLeadCapture?: (query: string) => void;
+  navigateOnSearch?: boolean;
 }
 
 export function SearchBar({ 
   placeholder = "Search electric bikes...", 
   onSearch, 
   models,
-  className = "" 
+  className = "",
+  onLeadCapture,
+  navigateOnSearch = true
 }: SearchBarProps) {
   const router = useRouter();
   const [query, setQuery] = useState('');
@@ -49,6 +53,15 @@ export function SearchBar({
       onSearch(query.trim());
       setIsSuggestionsOpen(false);
       inputRef.current?.blur();
+      
+      // Trigger lead capture modal
+      if (onLeadCapture) {
+        onLeadCapture(query.trim());
+      }
+      // Navigate if allowed
+      if (navigateOnSearch) {
+        router.push(`/search?q=${encodeURIComponent(query.trim())}&lead=1`);
+      }
     }
   };
 
@@ -65,8 +78,15 @@ export function SearchBar({
     setIsSuggestionsOpen(false);
     inputRef.current?.blur();
     
+    // Trigger lead capture modal
+    if (onLeadCapture) {
+      onLeadCapture(suggestion);
+    }
+    
     // Navigate to search page with the suggestion
-    router.push(`/search?q=${encodeURIComponent(suggestion)}`);
+    if (navigateOnSearch) {
+      router.push(`/search?q=${encodeURIComponent(suggestion)}&lead=1`);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

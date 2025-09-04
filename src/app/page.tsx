@@ -1,7 +1,7 @@
 import { allModels } from "@/lib/data";
 import { BikeCard } from "@/components/BikeCard";
 import { CompareSelector } from "@/components/CompareSelector";
-import { SearchFilters } from "@/components/SearchFilters";
+import { HomePageClient } from "@/components/HomePageClient";
 import { SearchResultsWrapper } from "@/components/SearchResultsWrapper";
 import { SearchProvider } from "@/contexts/SearchContext";
 import { Button } from "@/components/ui/button";
@@ -117,28 +117,13 @@ export default async function HomePage() {
               
               {/* Search and Filters */}
               <div className="max-w-5xl mx-auto">
-                <SearchFilters models={allModels} />
-              </div>
-
-              {/* Single CTA */}
-              <div className="pt-4">
-                <Button asChild size="lg" className="h-12 px-8 text-base font-medium bg-green-600 hover:bg-green-700 transition-colors">
-                  <Link href="/compare/evee-c1/vs/vlektra-bolt" className="flex items-center gap-2">
-                    <ArrowRight className="h-4 w-4" />
-                    Compare Popular Bikes
-                  </Link>
-                </Button>
+                <HomePageClient />
               </div>
             </div>
           </div>
         </section>
 
-        {/* Search Results Section */}
-        <section className="py-16 sm:py-20 lg:py-24 bg-background w-full">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 w-full">
-            <SearchResultsWrapper />
-          </div>
-        </section>
+        
 
         {/* Features Section */}
         <section className="py-12 sm:py-16 lg:py-20 bg-background w-full">

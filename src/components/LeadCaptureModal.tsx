@@ -12,7 +12,6 @@ interface LeadCaptureModalProps {
   onSubmit: (data: {
     name: string;
     phone: string;
-    modelSlug: string;
     timestamp: string;
   }) => void;
   location: string;
@@ -21,8 +20,7 @@ interface LeadCaptureModalProps {
 export function LeadCaptureModal({ onClose, onSubmit, location }: LeadCaptureModalProps) {
   const [formData, setFormData] = useState({
     name: '',
-    phone: '',
-    modelSlug: 'evee-c1' // This would be passed from the selected model
+    phone: ''
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -85,7 +83,6 @@ export function LeadCaptureModal({ onClose, onSubmit, location }: LeadCaptureMod
       const leadData = {
         name: formData.name.trim(),
         phone: formattedPhone,
-        modelSlug: formData.modelSlug,
         timestamp: new Date().toISOString()
       };
 

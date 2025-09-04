@@ -26,9 +26,10 @@ interface AdvancedFiltersProps {
     weight: string[];
     brakes: string[];
   }) => void;
+  onLeadCapture?: (query: string, filters: any) => void;
 }
 
-export function AdvancedFilters({ initialQuery, initialFilters, onSearch }: AdvancedFiltersProps) {
+export function AdvancedFilters({ initialQuery, initialFilters, onSearch, onLeadCapture }: AdvancedFiltersProps) {
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [selectedBrands, setSelectedBrands] = useState<string[]>(initialFilters.brands);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>(initialFilters.priceRanges);
@@ -95,7 +96,7 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch }: Adva
   };
 
   const handleSearch = () => {
-    onSearch(searchQuery, {
+    const filters = {
       brands: selectedBrands,
       priceRanges: selectedPriceRanges,
       ranges: selectedRanges,
@@ -104,7 +105,14 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch }: Adva
       topSpeed: selectedTopSpeed,
       weight: selectedWeight,
       brakes: selectedBrakes
-    });
+    };
+    
+    onSearch(searchQuery, filters);
+    
+    // Trigger lead capture modal
+    if (onLeadCapture) {
+      onLeadCapture(searchQuery, filters);
+    }
   };
 
   const clearAllFilters = () => {
@@ -145,6 +153,17 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch }: Adva
             models={allModels}
             placeholder="Search bikes..."
             className="w-full"
+            onLeadCapture={(q) => onLeadCapture?.(q, {
+              brands: selectedBrands,
+              priceRanges: selectedPriceRanges,
+              ranges: selectedRanges,
+              batteryTypes: selectedBatteryTypes,
+              motorPower: selectedMotorPower,
+              topSpeed: selectedTopSpeed,
+              weight: selectedWeight,
+              brakes: selectedBrakes
+            })}
+            navigateOnSearch={false}
           />
         </CardContent>
       </Card>

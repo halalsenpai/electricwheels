@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { SearchResults } from './SearchResults';
 import { AdvancedFilters } from './AdvancedFilters';
@@ -17,6 +17,10 @@ export function SearchResultsPage() {
   const searchParams = useSearchParams();
   const [showLeadModal, setShowLeadModal] = useState(false);
   const [userLocation, setUserLocation] = useState<string>('');
+  const [leadCaptureData, setLeadCaptureData] = useState<{
+    query: string;
+    filters?: any;
+  } | null>(null);
 
   // Get initial search query from URL
   const initialQuery = searchParams.get('q') || '';
@@ -26,6 +30,7 @@ export function SearchResultsPage() {
     ranges: searchParams.get('ranges')?.split(',') || [],
     batteryTypes: searchParams.get('batteryTypes')?.split(',') || []
   };
+  const shouldTriggerLead = searchParams.get('lead') === '1';
 
   // Track user location
   useEffect(() => {
@@ -46,6 +51,23 @@ export function SearchResultsPage() {
 
     trackLocation();
   }, []);
+
+  // Auto-open lead modal when arriving with a search (q/filters) and lead flag
+  const leadHandledRef = useRef(false);
+  useEffect(() => {
+    if (!shouldTriggerLead || leadHandledRef.current) return;
+    leadHandledRef.current = true;
+    setLeadCaptureData({ query: initialQuery, filters: initialFilters });
+    setShowLeadModal(true);
+    // Optional: clean the URL by removing lead flag
+    try {
+      const params = new URLSearchParams(Array.from(searchParams.entries()));
+      params.delete('lead');
+      router.replace(`/search?${params.toString()}`);
+    } catch {
+      // noop
+    }
+  }, [shouldTriggerLead, initialQuery, initialFilters, router]);
 
   const handleSearch = (query: string, filters: {
     brands: string[];
@@ -68,33 +90,38 @@ export function SearchResultsPage() {
     router.push(`/search?${params.toString()}`);
   };
 
-  const handleModelSelect = () => {
-    // Show lead capture modal when user selects a model
+  const handleLeadCapture = (query: string, filters?: any) => {
+    // Show lead capture modal when user performs search action
+    setLeadCaptureData({ query, filters });
     setShowLeadModal(true);
+  };
+
+  const handleModelSelect = () => {
+    // Navigate directly to model page without lead capture
+    // Lead capture is now handled at search level
   };
 
   const handleLeadSubmit = (leadData: {
     name: string;
     phone: string;
-    modelSlug: string;
     timestamp: string;
   }) => {
-    // Log lead data with location
+    // Log lead data with location and search context
     const leadInfo = {
       ...leadData,
       location: userLocation,
       timestamp: new Date().toISOString(),
-      searchQuery: initialQuery,
-      filters: initialFilters,
+      searchQuery: leadCaptureData?.query || initialQuery,
+      filters: leadCaptureData?.filters || initialFilters,
       userAgent: navigator.userAgent,
       referrer: document.referrer
     };
     
     console.log('Lead captured:', leadInfo);
     
-    // Close modal and navigate to model page
+    // Close modal and continue with search results
     setShowLeadModal(false);
-    router.push(`/bikes/${leadData.modelSlug}`);
+    setLeadCaptureData(null);
   };
 
   return (
@@ -132,6 +159,7 @@ export function SearchResultsPage() {
                 initialQuery={initialQuery}
                 initialFilters={initialFilters}
                 onSearch={handleSearch}
+                onLeadCapture={handleLeadCapture}
               />
             </div>
 

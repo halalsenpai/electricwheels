@@ -12,7 +12,7 @@ export function Header() {
             <Link href="/bikes">Bikes</Link>
             <Link href="/dealers">Dealers</Link>
             <Link href="/guides/intro">Guides</Link>
-            <Link href="/compare/evee-c1/vs/vlektra-bolt">Compare</Link>
+            <Link href="/search">Advanced Search</Link>
           </nav>
         </div>
       </div>

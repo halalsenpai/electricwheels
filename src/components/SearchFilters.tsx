@@ -13,9 +13,11 @@ import { useSearch } from '@/contexts/SearchContext';
 interface SearchFiltersProps {
   models: Model[];
   className?: string;
+  onLeadCapture?: (query: string) => void;
+  onAdvancedSearch?: () => void;
 }
 
-export function SearchFilters({ models, className = "" }: SearchFiltersProps) {
+export function SearchFilters({ models, className = "", onLeadCapture, onAdvancedSearch }: SearchFiltersProps) {
   const router = useRouter();
   const {
     searchQuery,
@@ -144,7 +146,8 @@ export function SearchFilters({ models, className = "" }: SearchFiltersProps) {
     if (selectedPriceRanges.length) params.set('priceRanges', selectedPriceRanges.join(','));
     if (selectedRanges.length) params.set('ranges', selectedRanges.join(','));
     if (selectedBatteryTypes.length) params.set('batteryTypes', selectedBatteryTypes.join(','));
-    
+    // trigger lead capture on arrival
+    params.set('lead', '1');
     router.push(`/search?${params.toString()}`);
   };
 
@@ -155,119 +158,124 @@ export function SearchFilters({ models, className = "" }: SearchFiltersProps) {
     selectedBatteryTypes.length > 0;
 
   return (
-    <div className={`space-y-8 ${className}`}>
-      {/* Search Bar */}
-      <SearchBar
-        onSearch={setSearchQuery}
-        models={models}
-        placeholder="Search by name, brand, or features..."
-        className="max-w-3xl mx-auto"
-      />
+    <div className={`space-y-6 ${className}`}>
+      {/* Filters (with integrated Search) */}
+      <div className="mx-auto max-w-6xl w-full">
+        <div className="rounded-2xl border bg-card text-card-foreground shadow-sm">
+          <div className="px-5 sm:px-6 md:px-8 py-5 sm:py-6 md:py-7">
+            {/* Integrated Search Bar */}
+            <div className="mb-4 sm:mb-5 md:mb-6">
+              <SearchBar
+                onSearch={setSearchQuery}
+                models={models}
+                placeholder="Search by name, brand, or features..."
+                className="w-full"
+                onLeadCapture={onLeadCapture}
+                navigateOnSearch={false}
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
+              <FilterDropdown
+                label="Brand"
+                options={filterOptions.brands}
+                selectedValues={selectedBrands}
+                onSelectionChange={setSelectedBrands}
+              />
+              <FilterDropdown
+                label="Price Range"
+                options={filterOptions.priceRanges}
+                selectedValues={selectedPriceRanges}
+                onSelectionChange={setSelectedPriceRanges}
+              />
+              <FilterDropdown
+                label="Range"
+                options={filterOptions.ranges}
+                selectedValues={selectedRanges}
+                onSelectionChange={setSelectedRanges}
+              />
+              <FilterDropdown
+                label="Battery"
+                options={filterOptions.batteryTypes}
+                selectedValues={selectedBatteryTypes}
+                onSelectionChange={setSelectedBatteryTypes}
+              />
+            </div>
 
-      {/* Filters */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-center gap-2">
-          <Filter className="h-5 w-5 text-muted-foreground" />
-          <span className="text-sm font-medium text-muted-foreground">Filter by:</span>
-        </div>
-        
-        <div className="flex flex-wrap items-center justify-center gap-4">
-          <FilterDropdown
-            label="Brand"
-            options={filterOptions.brands}
-            selectedValues={selectedBrands}
-            onSelectionChange={setSelectedBrands}
-          />
-          
-          <FilterDropdown
-            label="Price Range"
-            options={filterOptions.priceRanges}
-            selectedValues={selectedPriceRanges}
-            onSelectionChange={setSelectedPriceRanges}
-          />
-          
-          <FilterDropdown
-            label="Range"
-            options={filterOptions.ranges}
-            selectedValues={selectedRanges}
-            onSelectionChange={setSelectedRanges}
-          />
-          
-          <FilterDropdown
-            label="Battery"
-            options={filterOptions.batteryTypes}
-            selectedValues={selectedBatteryTypes}
-            onSelectionChange={setSelectedBatteryTypes}
-          />
-        </div>
 
-        {/* Active Filters */}
-        {hasActiveFilters && (
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-4 border-t border-gray-100 dark:border-gray-800">
-            <span className="text-sm font-medium text-muted-foreground">Active filters:</span>
-            {searchQuery && (
-              <Badge variant="secondary" className="gap-1">
-                Search: &quot;{searchQuery}&quot;
-                <X 
-                  className="h-3 w-3 cursor-pointer" 
-                  onClick={() => setSearchQuery('')}
-                />
-              </Badge>
+            {/* Active Filters */}
+            {hasActiveFilters && (
+              <div className="mt-4 sm:mt-5 md:mt-6 border-t pt-4 sm:pt-5 flex flex-wrap items-center gap-2">
+                <span className="text-xs sm:text-sm font-medium text-muted-foreground mr-1">Active:</span>
+                {searchQuery && (
+                  <Badge variant="secondary" className="gap-1 rounded-full px-3 py-1">
+                    Search: &quot;{searchQuery}&quot;
+                    <button
+                      type="button"
+                      aria-label="Remove search query filter"
+                      onClick={(e) => { e.stopPropagation(); setSearchQuery(''); }}
+                      className="inline-flex items-center justify-center"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                )}
+                {selectedBrands.map(brand => (
+                  <Badge key={brand} variant="secondary" className="gap-1 rounded-full px-3 py-1">
+                    {brand}
+                    <button
+                      type="button"
+                      aria-label={`Remove ${brand} filter`}
+                      onClick={(e) => { e.stopPropagation(); setSelectedBrands((prev) => prev.filter((b) => b !== brand)); }}
+                      className="inline-flex items-center justify-center"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                ))}
+                {selectedPriceRanges.map(range => (
+                  <Badge key={range} variant="secondary" className="gap-1 rounded-full px-3 py-1">
+                    {filterOptions.priceRanges.find(r => r.value === range)?.label}
+                    <button
+                      type="button"
+                      aria-label={`Remove ${range} price filter`}
+                      onClick={(e) => { e.stopPropagation(); setSelectedPriceRanges((prev) => prev.filter((r) => r !== range)); }}
+                      className="inline-flex items-center justify-center"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                ))}
+                {selectedRanges.map(range => (
+                  <Badge key={range} variant="secondary" className="gap-1 rounded-full px-3 py-1">
+                    {filterOptions.ranges.find(r => r.value === range)?.label}
+                    <button
+                      type="button"
+                      aria-label={`Remove ${range} range filter`}
+                      onClick={(e) => { e.stopPropagation(); setSelectedRanges((prev) => prev.filter((r) => r !== range)); }}
+                      className="inline-flex items-center justify-center"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                ))}
+                {selectedBatteryTypes.map(type => (
+                  <Badge key={type} variant="secondary" className="gap-1 rounded-full px-3 py-1">
+                    {type}
+                    <button
+                      type="button"
+                      aria-label={`Remove ${type} battery filter`}
+                      onClick={(e) => { e.stopPropagation(); setSelectedBatteryTypes((prev) => prev.filter((t) => t !== type)); }}
+                      className="inline-flex items-center justify-center"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                ))}
+
+              </div>
             )}
-            {selectedBrands.map(brand => (
-              <Badge key={brand} variant="secondary" className="gap-1">
-                {brand}
-                <X 
-                  className="h-3 w-3 cursor-pointer" 
-                  onClick={() => setSelectedBrands(selectedBrands.filter(b => b !== brand))}
-                />
-              </Badge>
-            ))}
-            {selectedPriceRanges.map(range => (
-              <Badge key={range} variant="secondary" className="gap-1">
-                {filterOptions.priceRanges.find(r => r.value === range)?.label}
-                <X 
-                  className="h-3 w-3 cursor-pointer" 
-                  onClick={() => setSelectedPriceRanges(selectedPriceRanges.filter(r => r !== range))}
-                />
-              </Badge>
-            ))}
-            {selectedRanges.map(range => (
-              <Badge key={range} variant="secondary" className="gap-1">
-                {filterOptions.ranges.find(r => r.value === range)?.label}
-                <X 
-                  className="h-3 w-3 cursor-pointer" 
-                  onClick={() => setSelectedRanges(selectedRanges.filter(r => r !== range))}
-                />
-              </Badge>
-            ))}
-            {selectedBatteryTypes.map(type => (
-              <Badge key={type} variant="secondary" className="gap-1">
-                {type}
-                <X 
-                  className="h-3 w-3 cursor-pointer" 
-                  onClick={() => setSelectedBatteryTypes(selectedBatteryTypes.filter(t => t !== type))}
-                />
-              </Badge>
-            ))}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={clearAllFilters}
-              className="h-6 px-2 text-xs"
-            >
-              Clear all
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={navigateToSearchPage}
-              className="h-6 px-2 text-xs"
-            >
-              Advanced Search
-            </Button>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
