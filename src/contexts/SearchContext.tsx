@@ -16,6 +16,8 @@ interface SearchContextType {
   setSelectedRanges: (ranges: string[]) => void;
   selectedBatteryTypes: string[];
   setSelectedBatteryTypes: (types: string[]) => void;
+  selectedVehicleTypes: string[];
+  setSelectedVehicleTypes: (types: string[]) => void;
 }
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
@@ -27,6 +29,7 @@ export function SearchProvider({ children, initialModels }: { children: ReactNod
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
   const [selectedRanges, setSelectedRanges] = useState<string[]>([]);
   const [selectedBatteryTypes, setSelectedBatteryTypes] = useState<string[]>([]);
+  const [selectedVehicleTypes, setSelectedVehicleTypes] = useState<string[]>([]);
 
   return (
     <SearchContext.Provider value={{
@@ -42,6 +45,8 @@ export function SearchProvider({ children, initialModels }: { children: ReactNod
       setSelectedRanges,
       selectedBatteryTypes,
       setSelectedBatteryTypes,
+      selectedVehicleTypes,
+      setSelectedVehicleTypes,
     }}>
       {children}
     </SearchContext.Provider>

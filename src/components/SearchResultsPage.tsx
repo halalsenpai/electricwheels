@@ -28,7 +28,8 @@ export function SearchResultsPage() {
     brands: searchParams.get('brands')?.split(',') || [],
     priceRanges: searchParams.get('priceRanges')?.split(',') || [],
     ranges: searchParams.get('ranges')?.split(',') || [],
-    batteryTypes: searchParams.get('batteryTypes')?.split(',') || []
+    batteryTypes: searchParams.get('batteryTypes')?.split(',') || [],
+    vehicleTypes: searchParams.get('vehicleTypes')?.split(',') || []
   };
   const shouldTriggerLead = searchParams.get('lead') === '1';
 
@@ -74,6 +75,7 @@ export function SearchResultsPage() {
     priceRanges: string[];
     ranges: string[];
     batteryTypes: string[];
+    vehicleTypes: string[];
     motorPower: string[];
     topSpeed: string[];
     weight: string[];
@@ -86,6 +88,7 @@ export function SearchResultsPage() {
     if (filters.priceRanges.length) params.set('priceRanges', filters.priceRanges.join(','));
     if (filters.ranges.length) params.set('ranges', filters.ranges.join(','));
     if (filters.batteryTypes.length) params.set('batteryTypes', filters.batteryTypes.join(','));
+    if (filters.vehicleTypes.length) params.set('vehicleTypes', filters.vehicleTypes.join(','));
     
     router.push(`/search?${params.toString()}`);
   };
@@ -166,7 +169,46 @@ export function SearchResultsPage() {
             {/* Main Content */}
             <div className="flex-1 min-w-0">
               <SearchResults 
-                models={allModels}
+                models={allModels.filter(model => {
+                  // Apply filters from URL params
+                  const queryLower = initialQuery.toLowerCase();
+                  const matchesQuery = !initialQuery ||
+                    model.name.toLowerCase().includes(queryLower) ||
+                    model.brand.toLowerCase().includes(queryLower) ||
+                    model.description?.toLowerCase().includes(queryLower);
+
+                  const matchesBrands = initialFilters.brands.length === 0 || initialFilters.brands.includes(model.brand);
+
+                  const matchesPriceRanges = initialFilters.priceRanges.length === 0 || initialFilters.priceRanges.some(range => {
+                    const price = model.price.msrp;
+                    switch (range) {
+                      case 'under-100k': return price < 100000;
+                      case '100k-200k': return price >= 100000 && price < 200000;
+                      case '200k-300k': return price >= 200000 && price < 300000;
+                      case '300k-500k': return price >= 300000 && price < 500000;
+                      case 'over-500k': return price >= 500000;
+                      default: return false;
+                    }
+                  });
+
+                  const matchesRanges = initialFilters.ranges.length === 0 || initialFilters.ranges.some(range => {
+                    const rangeKm = model.specs.rangeKm;
+                    if (rangeKm === undefined) return false;
+                    switch (range) {
+                      case 'under-50km': return rangeKm < 50;
+                      case '50-80km': return rangeKm >= 50 && rangeKm < 80;
+                      case '80-120km': return rangeKm >= 80 && rangeKm < 120;
+                      case 'over-120km': return rangeKm >= 120;
+                      default: return false;
+                    }
+                  });
+
+                  const matchesBatteryTypes = initialFilters.batteryTypes.length === 0 || (model.specs.batteryType && initialFilters.batteryTypes.includes(model.specs.batteryType));
+
+                  const matchesVehicleTypes = initialFilters.vehicleTypes.length === 0 || initialFilters.vehicleTypes.includes(model.vehicleType);
+
+                  return matchesQuery && matchesBrands && matchesPriceRanges && matchesRanges && matchesBatteryTypes && matchesVehicleTypes;
+                })}
                 onModelSelect={handleModelSelect}
               />
             </div>

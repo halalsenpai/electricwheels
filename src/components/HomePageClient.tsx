@@ -19,7 +19,8 @@ export function HomePageClient() {
     selectedBrands,
     selectedPriceRanges,
     selectedRanges,
-    selectedBatteryTypes
+    selectedBatteryTypes,
+    selectedVehicleTypes
   } = useSearch();
 
   useEffect(() => {
@@ -58,6 +59,7 @@ export function HomePageClient() {
     if (selectedPriceRanges.length) params.set('priceRanges', selectedPriceRanges.join(','));
     if (selectedRanges.length) params.set('ranges', selectedRanges.join(','));
     if (selectedBatteryTypes.length) params.set('batteryTypes', selectedBatteryTypes.join(','));
+    if (selectedVehicleTypes.length) params.set('vehicleTypes', selectedVehicleTypes.join(','));
     router.push(`/search?${params.toString()}`);
   };
 

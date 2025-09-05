@@ -6,7 +6,7 @@ import { SearchBar } from './SearchBar';
 import { FilterDropdown } from './FilterDropdown';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { X, Filter, Building2, DollarSign, Route, Battery, Zap, Gauge, Weight, Shield, Search } from 'lucide-react';
+import { X, Filter, Building2, DollarSign, Route, Battery, Zap, Gauge, Weight, Shield, Search, Bike, Scooter } from 'lucide-react';
 import { Model } from '@/types';
 import { useSearch } from '@/contexts/SearchContext';
 
@@ -30,6 +30,8 @@ export function SearchFilters({ models, className = "", onLeadCapture, onAdvance
     setSelectedRanges,
     selectedBatteryTypes,
     setSelectedBatteryTypes,
+    selectedVehicleTypes,
+    setSelectedVehicleTypes,
     setFilteredModels
   } = useSearch();
 
@@ -62,7 +64,12 @@ export function SearchFilters({ models, className = "", onLeadCapture, onAdvance
       count: models.filter(m => m.specs.batteryType === type).length
     }));
 
-    return { brands, priceRanges, ranges, batteryTypes };
+    const vehicleTypes = [
+      { value: 'scooter', label: 'Scooter', count: models.filter(m => m.vehicleType === 'scooter').length },
+      { value: 'motorcycle', label: 'Motorcycle', count: models.filter(m => m.vehicleType === 'motorcycle').length }
+    ];
+
+    return { brands, priceRanges, ranges, batteryTypes, vehicleTypes };
   }, [models]);
 
   // Filter models based on search and filters
@@ -123,8 +130,15 @@ export function SearchFilters({ models, className = "", onLeadCapture, onAdvance
       );
     }
 
+    // Vehicle type filter
+    if (selectedVehicleTypes.length > 0) {
+      filtered = filtered.filter(model => 
+        selectedVehicleTypes.includes(model.vehicleType)
+      );
+    }
+
     return filtered;
-  }, [models, searchQuery, selectedBrands, selectedPriceRanges, selectedRanges, selectedBatteryTypes]);
+  }, [models, searchQuery, selectedBrands, selectedPriceRanges, selectedRanges, selectedBatteryTypes, selectedVehicleTypes]);
 
   // Update results when filters change
   useEffect(() => {
@@ -137,6 +151,7 @@ export function SearchFilters({ models, className = "", onLeadCapture, onAdvance
     setSelectedPriceRanges([]);
     setSelectedRanges([]);
     setSelectedBatteryTypes([]);
+    setSelectedVehicleTypes([]);
   };
 
   const navigateToSearchPage = () => {
@@ -146,6 +161,7 @@ export function SearchFilters({ models, className = "", onLeadCapture, onAdvance
     if (selectedPriceRanges.length) params.set('priceRanges', selectedPriceRanges.join(','));
     if (selectedRanges.length) params.set('ranges', selectedRanges.join(','));
     if (selectedBatteryTypes.length) params.set('batteryTypes', selectedBatteryTypes.join(','));
+    if (selectedVehicleTypes.length) params.set('vehicleTypes', selectedVehicleTypes.join(','));
     // trigger lead capture on arrival
     params.set('lead', '1');
     router.push(`/search?${params.toString()}`);
@@ -155,7 +171,8 @@ export function SearchFilters({ models, className = "", onLeadCapture, onAdvance
     selectedBrands.length > 0 || 
     selectedPriceRanges.length > 0 || 
     selectedRanges.length > 0 || 
-    selectedBatteryTypes.length > 0;
+    selectedBatteryTypes.length > 0 ||
+    selectedVehicleTypes.length > 0;
 
   return (
     <div className={`space-y-6 ${className}`}>
@@ -174,7 +191,14 @@ export function SearchFilters({ models, className = "", onLeadCapture, onAdvance
                 navigateOnSearch={false}
               />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
+              <FilterDropdown
+                label="Type"
+                options={filterOptions.vehicleTypes}
+                selectedValues={selectedVehicleTypes}
+                onSelectionChange={setSelectedVehicleTypes}
+                icon={<Bike className="h-4 w-4" />}
+              />
               <FilterDropdown
                 label="Brand"
                 options={filterOptions.brands}
@@ -275,6 +299,20 @@ export function SearchFilters({ models, className = "", onLeadCapture, onAdvance
                       aria-label={`Remove ${type} battery filter`}
                       onClick={(e) => { e.stopPropagation(); setSelectedBatteryTypes((prev) => prev.filter((t) => t !== type)); }}
                       className="inline-flex items-center justify-center hover:bg-orange-200 dark:hover:bg-orange-800 rounded-full p-0.5 transition-colors"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                ))}
+                {selectedVehicleTypes.map(type => (
+                  <Badge key={type} variant="secondary" className="gap-1 rounded-full px-3 py-1 bg-indigo-100 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                    {type === 'scooter' ? <Scooter className="h-3 w-3" /> : <Bike className="h-3 w-3" />}
+                    {type === 'scooter' ? 'Scooter' : 'Motorcycle'}
+                    <button
+                      type="button"
+                      aria-label={`Remove ${type} vehicle type filter`}
+                      onClick={(e) => { e.stopPropagation(); setSelectedVehicleTypes((prev) => prev.filter((t) => t !== type)); }}
+                      className="inline-flex items-center justify-center hover:bg-indigo-200 dark:hover:bg-indigo-800 rounded-full p-0.5 transition-colors"
                     >
                       <X className="h-3 w-3" />
                     </button>

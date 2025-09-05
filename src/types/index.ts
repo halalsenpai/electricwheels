@@ -32,6 +32,7 @@ export type Model = {
   brand: string;
   name: string;
   slug: string;
+  vehicleType: 'scooter' | 'motorcycle';
   specs: ModelSpec;
   price: Price;
   images?: string[];

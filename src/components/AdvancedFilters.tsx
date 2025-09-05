@@ -5,7 +5,7 @@ import { SearchBar } from './SearchBar';
 import { FilterDropdown } from './FilterDropdown';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Filter, Search, Zap, Gauge, Building2, DollarSign, Route, Battery, Weight, Shield } from 'lucide-react';
+import { Filter, Search, Zap, Gauge, Building2, DollarSign, Route, Battery, Weight, Shield, Bike, Scooter } from 'lucide-react';
 import { allModels } from '@/lib/data';
 
 interface AdvancedFiltersProps {
@@ -15,12 +15,14 @@ interface AdvancedFiltersProps {
     priceRanges: string[];
     ranges: string[];
     batteryTypes: string[];
+    vehicleTypes: string[];
   };
   onSearch: (query: string, filters: {
     brands: string[];
     priceRanges: string[];
     ranges: string[];
     batteryTypes: string[];
+    vehicleTypes: string[];
     motorPower: string[];
     topSpeed: string[];
     weight: string[];
@@ -35,6 +37,7 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch, onLead
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>(initialFilters.priceRanges);
   const [selectedRanges, setSelectedRanges] = useState<string[]>(initialFilters.ranges);
   const [selectedBatteryTypes, setSelectedBatteryTypes] = useState<string[]>(initialFilters.batteryTypes);
+  const [selectedVehicleTypes, setSelectedVehicleTypes] = useState<string[]>(initialFilters.vehicleTypes);
   const [selectedMotorPower, setSelectedMotorPower] = useState<string[]>([]);
   const [selectedTopSpeed, setSelectedTopSpeed] = useState<string[]>([]);
   const [selectedWeight, setSelectedWeight] = useState<string[]>([]);
@@ -69,6 +72,11 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch, onLead
       count: allModels.filter(m => m.specs.batteryType === type).length
     })),
 
+    vehicleTypes: [
+      { value: 'scooter', label: 'Scooter', count: allModels.filter(m => m.vehicleType === 'scooter').length },
+      { value: 'motorcycle', label: 'Motorcycle', count: allModels.filter(m => m.vehicleType === 'motorcycle').length }
+    ],
+
     motorPower: [
       { value: 'under-1kw', label: 'Under 1kW', count: allModels.filter(m => m.specs.motorPowerW < 1000).length },
       { value: '1-2kw', label: '1kW - 2kW', count: allModels.filter(m => m.specs.motorPowerW >= 1000 && m.specs.motorPowerW < 2000).length },
@@ -101,6 +109,7 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch, onLead
       priceRanges: selectedPriceRanges,
       ranges: selectedRanges,
       batteryTypes: selectedBatteryTypes,
+      vehicleTypes: selectedVehicleTypes,
       motorPower: selectedMotorPower,
       topSpeed: selectedTopSpeed,
       weight: selectedWeight,
@@ -121,6 +130,7 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch, onLead
     setSelectedPriceRanges([]);
     setSelectedRanges([]);
     setSelectedBatteryTypes([]);
+    setSelectedVehicleTypes([]);
     setSelectedMotorPower([]);
     setSelectedTopSpeed([]);
     setSelectedWeight([]);
@@ -132,6 +142,7 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch, onLead
     selectedPriceRanges.length > 0 || 
     selectedRanges.length > 0 || 
     selectedBatteryTypes.length > 0 ||
+    selectedVehicleTypes.length > 0 ||
     selectedMotorPower.length > 0 ||
     selectedTopSpeed.length > 0 ||
     selectedWeight.length > 0 ||
@@ -211,6 +222,15 @@ export function AdvancedFilters({ initialQuery, initialFilters, onSearch, onLead
             onSelectionChange={setSelectedBatteryTypes}
             className="w-full"
             icon={<Battery className="h-4 w-4" />}
+          />
+          
+          <FilterDropdown
+            label="Vehicle Type"
+            options={filterOptions.vehicleTypes}
+            selectedValues={selectedVehicleTypes}
+            onSelectionChange={setSelectedVehicleTypes}
+            className="w-full"
+            icon={<Bike className="h-4 w-4" />}
           />
         </CardContent>
       </Card>
