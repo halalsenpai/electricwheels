@@ -1,5 +1,6 @@
 import { allModels, getModelBySlug } from '@/lib/data';
 import { CompareTable } from '@/components/CompareTable';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -128,6 +129,13 @@ export default async function ComparePage({ params }: ComparePageProps) {
       />
       <div className="mx-auto max-w-6xl px-4 py-6">
         <div className="max-w-5xl mx-auto p-6 space-y-6">
+          <Breadcrumbs 
+            items={[
+              { label: "Compare", href: "/compare" },
+              { label: `${modelA.name} vs ${modelB.name} vs ${modelC.name}` }
+            ]} 
+          />
+          
           {/* Header */}
           <div className="flex items-center gap-4 mb-6">
             <Button asChild variant="ghost" size="sm">

@@ -1,4 +1,5 @@
 import { ComparePage } from '@/components/ComparePage';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -8,5 +9,16 @@ export const metadata: Metadata = {
 };
 
 export default function Compare() {
-  return <ComparePage />;
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
+        <Breadcrumbs 
+          items={[
+            { label: "Compare", href: "/compare" }
+          ]} 
+        />
+      </div>
+      <ComparePage />
+    </div>
+  );
 }

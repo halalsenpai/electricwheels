@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getModelBySlug, allModels } from '@/lib/data';
 import { CompareTable } from '@/components/CompareTable';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
 import type { Metadata } from 'next';
 import Script from 'next/script';
 
@@ -101,6 +102,12 @@ export default async function ComparePage({ params }: ComparePageProps) {
       />
       <div className="mx-auto max-w-6xl px-4 py-6">
         <div className="max-w-5xl mx-auto p-6 space-y-6">
+        <Breadcrumbs 
+          items={[
+            { label: "Compare", href: "/compare" },
+            { label: `${A.name} vs ${B.name}` }
+          ]} 
+        />
         <h1 className="text-3xl font-bold">{A.name} vs {B.name}</h1>
         <p className="text-muted-foreground">
           Detailed comparison of {A.name} and {B.name} electric bikes

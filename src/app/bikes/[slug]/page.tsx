@@ -5,6 +5,7 @@ import { SpecTable } from '@/components/SpecTable';
 import { InstallmentCalculator } from '@/components/InstallmentCalculator';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 import { LeadForm } from '@/components/LeadForm';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
 
 export async function generateStaticParams() {
   return allModels.map((m) => ({ slug: m.slug }));
@@ -34,6 +35,14 @@ export default async function ModelPage({ params }: { params: Promise<{ slug: st
       <div className="mx-auto max-w-6xl px-4 py-6">
         <div className="max-w-5xl mx-auto p-6 space-y-8">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        
+        <Breadcrumbs 
+          items={[
+            { label: "Bikes", href: "/bikes" },
+            { label: model.name }
+          ]} 
+        />
+        
         <header className="space-y-2">
           <h1 className="text-3xl font-bold">{model.name}</h1>
           <div className="text-muted-foreground">
