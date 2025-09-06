@@ -1,5 +1,6 @@
 import { allModels } from "@/lib/data";
 import { BikeCard } from "@/components/BikeCard";
+import { HorizontalBikeCard } from "@/components/HorizontalBikeCard";
 import { CompareSelector } from "@/components/CompareSelector";
 import { HomePageClient } from "@/components/HomePageClient";
 import { SearchResultsWrapper } from "@/components/SearchResultsWrapper";
@@ -123,7 +124,55 @@ export default async function HomePage() {
           </div>
         </section>
 
-        
+        {/* Popular Bikes Section */}
+        <section className="py-12 sm:py-16 lg:py-20 bg-muted/30 w-full">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+            <div className="mb-8 sm:mb-12">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
+                Trending Electric Bikes
+              </h2>
+              <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">
+                Discover the most popular EV bikes in Pakistan, handpicked by our experts.
+              </p>
+            </div>
+            
+            {/* Horizontal Scrollable Cards */}
+            <div className="relative">
+              <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-4 scrollbar-hide">
+                {featuredModels.map((model, index) => (
+                  <HorizontalBikeCard key={model.id} model={model} index={index} />
+                ))}
+              </div>
+              
+              {/* Scroll Indicators */}
+              <div className="flex justify-center mt-4 gap-2">
+                {featuredModels.map((_, index) => (
+                  <div key={index} className="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="text-center mt-8 sm:mt-12 space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Can&apos;t find what you&apos;re looking for? Explore our complete collection.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+                <Button asChild variant="default" size="lg" className="w-full sm:w-auto bg-green-600 hover:bg-green-700">
+                  <Link href="/bikes">
+                    View All Bikes
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
+                  <Link href="/search">
+                    Advanced Search
+                    <Zap className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Features Section */}
         <section className="py-12 sm:py-16 lg:py-20 bg-background w-full">
@@ -173,34 +222,6 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* Featured Bikes Section */}
-        <section className="py-12 sm:py-16 lg:py-20 bg-background w-full">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-            <div className="text-center space-y-3 sm:space-y-4 mb-8 sm:mb-12">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
-                Popular Electric Bikes
-              </h2>
-              <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto">
-                Discover the most popular EV bikes in Pakistan, handpicked by our experts.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-              {featuredModels.map((model) => (
-                <BikeCard key={model.id} model={model} />
-              ))}
-            </div>
-            
-            <div className="text-center mt-8 sm:mt-12">
-              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
-                <Link href="/bikes">
-                  View All Bikes
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </section>
 
         {/* CTA Section */}
         <section className="py-12 sm:py-16 lg:py-20 bg-green-600 dark:bg-green-700 w-full">
@@ -231,7 +252,7 @@ export default async function HomePage() {
             </div>
         </div>
                 </section>
-    </div>
+            </div>
       </SearchProvider>
     </>
   );

@@ -6,7 +6,7 @@ import { SearchBar } from './SearchBar';
 import { FilterDropdown } from './FilterDropdown';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { X, Filter, Building2, DollarSign, Route, Battery, Zap, Gauge, Weight, Shield, Search, Bike, Scooter } from 'lucide-react';
+import { X, Filter, Building2, DollarSign, Route, Battery, Zap, Gauge, Weight, Shield, Search, Bike } from 'lucide-react';
 import { Model } from '@/types';
 import { useSearch } from '@/contexts/SearchContext';
 
@@ -306,7 +306,7 @@ export function SearchFilters({ models, className = "", onLeadCapture, onAdvance
                 ))}
                 {selectedVehicleTypes.map(type => (
                   <Badge key={type} variant="secondary" className="gap-1 rounded-full px-3 py-1 bg-indigo-100 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
-                    {type === 'scooter' ? <Scooter className="h-3 w-3" /> : <Bike className="h-3 w-3" />}
+                    {type === 'scooter' ? <Zap className="h-3 w-3" /> : <Bike className="h-3 w-3" />}
                     {type === 'scooter' ? 'Scooter' : 'Motorcycle'}
                     <button
                       type="button"
